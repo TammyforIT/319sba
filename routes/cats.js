@@ -1,53 +1,98 @@
 import express from "express";
-import Cat from "../models/Cats.js";
+import Cat from "../models/Cat.js";
 
 const router = express.Router();
 
-// GET all cats
-router.get("/", async (req, res) => {
+/**
+ * GET /cats
+ * Pagination + Sorting + Filtering
+ * 
+ * Query params:
+ * - page 
+ * - limit 
+ * - sort 
+ * - breed 
+ */
+router.get("/", async (req, res, next) => {
   try {
-    const cats = await Cat.find()
-      .populate("owner")
-      .populate("vet");
+    const {
+      breed,
+      page = 1,
+      limit = 10,
+      sort = "name"
+    } = req.query;
 
-    res.json(cats);
+    const filter = breed ? { breed } : {};
+
+    const cats = await Cat.find(filter)
+      .populate("owner vet")
+      .sort(sort)
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    const total = await Cat.countDocuments(filter);
+
+    res.json({
+      page: Number(page),
+      limit: Number(limit),
+      total,
+      totalPages: Math.ceil(total / limit),
+      data: cats
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 });
 
-
-router.post("/", async (req, res) => {
+/**
+ * GET /cats/:id
+ */
+router.get("/:id", async (req, res, next) => {
   try {
-    const cat = await Cat.create(req.body);
+    const cat = await Cat.findById(req.params.id).populate("owner vet");
     res.json(cat);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    next(err);
   }
 });
 
-// PATCH update cat
-router.patch("/:id", async (req, res) => {
+/**
+ * POST /cats
+ */
+router.post("/", async (req, res, next) => {
+  try {
+    const newCat = await Cat.create(req.body);
+    res.json(newCat);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * PATCH /cats/:id
+ */
+router.patch("/:id", async (req, res, next) => {
   try {
     const updated = await Cat.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
-
     res.json(updated);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    next(err);
   }
 });
 
-
-router.delete("/:id", async (req, res) => {
+/**
+ * DELETE /cats/:id
+ */
+router.delete("/:id", async (req, res, next) => {
   try {
     await Cat.findByIdAndDelete(req.params.id);
-    res.json({ message: "Deleted" });
+    res.json({ message: "Cat deleted" });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    next(err);
   }
 });
 
