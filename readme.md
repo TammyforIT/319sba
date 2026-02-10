@@ -1,4 +1,30 @@
-This API uses Express for all the routing and Mongoose to connect to MongoDB and define the data models. It includes three models — Cats, Owners, and Vets — and each one has full CRUD routes. The Cat model also connects to owners and vets using Mongoose references.
+This API uses Express for all routing and Mongoose to handle the MongoDB connection and data models.  
+The project includes three main models — **Cats**, **Owners**, and **Vets** — each with full CRUD functionality.  
+The Cat model also references both Owners and Vets, allowing the data to stay connected and consistent.
 
-The cats route includes extra features like pagination, filtering, and sorting, so you can control how many results you get and search by breed or sort by different fields. I used try/catch blocks so errors don’t break the server, and everything runs through a global error‑handling middleware. There’s also a logger middleware that prints every request with a timestamp. The conn.js file handles connecting the database to MongoDB Compass, and the seed.js file is used to fill the database with sample data.
-owner db, vetdb, and cats db. i included a seed.js. conn.js is connected.
+The **cats** route includes additional features such as:
+- Pagination  
+- Filtering (for example, by breed)  
+- Sorting  
+
+These options make it easier to control how many results you get and how they’re organized.
+
+All routes are wrapped in try/catch blocks so errors don’t break the server, and everything is passed through a global error‑handling middleware.  
+There is also a logger middleware that prints each request with a timestamp, making it easy to track activity during development.  
+**So far, the project includes two types of middleware: a request logger and a global error handler.**
+
+The `conn.js` file manages the MongoDB connection using the `.env` configuration.  
+The `seed.js` file populates the database with sample Owners, Vets, and Cats, including the proper references between them.
+
+Overall, the project includes:
+- Full CRUD routes for Cats, Owners, and Vets  
+- Mongoose schemas with validation  
+- Model relationships using ObjectId references  
+- Logger middleware  
+- Global error handler  
+- Seed file for sample data  
+- Clean and organized folder structure  
+- A working MongoDB connection setup  
+
+Everything required for the SBA is implemented and functioning.
+
