@@ -11,10 +11,10 @@ These options make it easier to control how many results you get and how they’
 
 All routes are wrapped in try/catch blocks so errors don’t break the server, and everything is passed through a global error‑handling middleware.  
 There is also a logger middleware that prints each request with a timestamp, making it easy to track activity during development.  
-**So far, the project includes two types of middleware: a request logger and a global error handler.**
+ the project includes two types of middleware: a request logger and a global error handler.**
 
 The `conn.js` file manages the MongoDB connection using the `.env` configuration.  
-The `seed.js` file populates the database with sample Owners, Vets, and Cats, including the proper references between them.
+The `seed.js` file populates db.
 
 Overall, the project includes:
 - Full CRUD routes for Cats, Owners, and Vets  
@@ -26,5 +26,4 @@ Overall, the project includes:
 - Clean and organized folder structure  
 - A working MongoDB connection setup  
 
-Everything required for the SBA is implemented and functioning.
 
