@@ -1,2 +1,4 @@
-a cat api using crud and moongoose.
+This API uses Express for all the routing and Mongoose to connect to MongoDB and define the data models. It includes three models — Cats, Owners, and Vets — and each one has full CRUD routes. The Cat model also connects to owners and vets using Mongoose references.
+
+The cats route includes extra features like pagination, filtering, and sorting, so you can control how many results you get and search by breed or sort by different fields. I used try/catch blocks so errors don’t break the server, and everything runs through a global error‑handling middleware. There’s also a logger middleware that prints every request with a timestamp. The conn.js file handles connecting the database to MongoDB Compass, and the seed.js file is used to fill the database with sample data.
 owner db, vetdb, and cats db. i included a seed.js. conn.js is connected.
