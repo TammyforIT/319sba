@@ -6,12 +6,6 @@ const router = express.Router();
 /**
  * GET /cats
  * Pagination + Sorting + Filtering
- * 
- * Query params:
- * - page 
- * - limit 
- * - sort 
- * - breed 
  */
 router.get("/", async (req, res, next) => {
   try {
@@ -50,6 +44,7 @@ router.get("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   try {
     const cat = await Cat.findById(req.params.id).populate("owner vet");
+    if (!cat) return res.status(404).json({ error: "Cat not found" });
     res.json(cat);
   } catch (err) {
     next(err);
@@ -62,7 +57,7 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const newCat = await Cat.create(req.body);
-    res.json(newCat);
+    res.status(201).json(newCat);
   } catch (err) {
     next(err);
   }
@@ -78,6 +73,7 @@ router.patch("/:id", async (req, res, next) => {
       req.body,
       { new: true }
     );
+    if (!updated) return res.status(404).json({ error: "Cat not found" });
     res.json(updated);
   } catch (err) {
     next(err);
@@ -89,7 +85,8 @@ router.patch("/:id", async (req, res, next) => {
  */
 router.delete("/:id", async (req, res, next) => {
   try {
-    await Cat.findByIdAndDelete(req.params.id);
+    const deleted = await Cat.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ error: "Cat not found" });
     res.json({ message: "Cat deleted" });
   } catch (err) {
     next(err);
