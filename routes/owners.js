@@ -3,21 +3,41 @@ import Owner from "../models/Owner.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  res.json(await Owner.find());
+router.get("/", async (req, res, next) => {
+  try {
+    const owners = await Owner.find();
+    res.json(owners);
+  } catch (err) {
+    next(err);
+  }
 });
 
-router.post("/", async (req, res) => {
-  res.json(await Owner.create(req.body));
+router.post("/", async (req, res, next) => {
+  try {
+    const newOwner = await Owner.create(req.body);
+    res.json(newOwner);
+  } catch (err) {
+    next(err);
+  }
 });
 
-router.patch("/:id", async (req, res) => {
-  res.json(await Owner.findByIdAndUpdate(req.params.id, req.body, { new: true }));
+router.patch("/:id", async (req, res, next) => {
+  try {
+    const updated = await Owner.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updated);
+  } catch (err) {
+    next(err);
+  }
 });
 
-router.delete("/:id", async (req, res) => {
-  await Owner.findByIdAndDelete(req.params.id);
-  res.json({ message: "Owner deleted" });
+router.delete("/:id", async (req, res, next) => {
+  try {
+    await Owner.findByIdAndDelete(req.params.id);
+    res.json({ message: "Owner deleted" });
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;
+
